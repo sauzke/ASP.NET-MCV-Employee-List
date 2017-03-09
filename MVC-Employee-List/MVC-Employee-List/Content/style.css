@@ -1,0 +1,54 @@
+﻿body{
+    background-color:#eee;
+}
+
+#main_table>tr{ 
+    border:1px solid #c0c0c0;
+}
+
+#info_block{
+    width:600px;
+    float:left;
+}
+
+#btn_block{
+    margin-top:70px;    
+    margin-left:650px;
+}
+
+.image_col{
+    padding:10px;
+}
+
+.image_col img{
+    height:150px;
+    width:150px;
+    margin-left:100px;
+}
+
+.info_col{
+    width:300px;
+    height:150px;
+}
+
+.emp_table td{
+    padding:5px;
+}
+
+.radio_col{
+    width:50px;
+    text-align:center;
+}
+
+a, a:after, a:hover, a:visited{
+    text-decoration:none;
+}
+
+button{
+    width:200px;
+    height: 50px;
+    font-size:15pt;
+    color:black;
+    display:block;
+    margin: 10px 0; 
+}
