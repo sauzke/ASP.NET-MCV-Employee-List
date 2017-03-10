@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Employee_List.Models.Employee>
-
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
@@ -9,43 +7,62 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table" id="emp_table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.name)
+            Employee Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.title)
+            Employee Title
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.start_date)
+            Employee Start Date
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.end_date)
+            Employee End Date
         </th>        
         <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.start_date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.end_date)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
+    </tr>    
 </table>
+
+@section Scripts{
+    <script>
+        var table = $('#emp_table');
+
+        $(document).ready(function () {
+            doAjax(function (callback) {
+                if (callback != 'success') {
+                    console.log("ajax reqest failed");
+                }
+            });
+        });
+
+        function doAjax(callback) {
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("GetAll")',
+                dataType: 'json',
+                success: function (data) {
+                    // parse json
+                    var htmlstr = "";
+                    for (var i = 0; i < data.length; i++) {
+                        htmlstr += "<tr>";
+                        htmlstr += "<td>" + data[i].name + "</td>";
+                        htmlstr += "<td>" + data[i].title + "</td>";
+                        htmlstr += "<td>" + new Date(parseInt(data[i].start_date.substr(6))) + "</td>";
+                        htmlstr += "<td>" + new Date(parseInt(data[i].end_date.substr(6))) + "</td>";
+                        htmlstr += "<td><a href='/Employee/Edit?id=" + data[i].ID + "'>Edit</a><a href='/Employee/Details?id=" + data[i].ID + "'>Details</a><a href='/Employee/Delete?id=" + data[i].ID + "'>Delete</a></td>";
+                        htmlstr += "</tr>";
+                    }
+
+                    table.append(htmlstr);
+                    return callback('success');
+                },
+                error: function () {
+                    return callback('failed');
+                }
+            });
+        }
+    </script>
+    }

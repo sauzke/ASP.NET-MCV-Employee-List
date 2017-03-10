@@ -18,7 +18,12 @@ namespace Employee_List.Controllers
         // GET: Employee
         public ActionResult Index()
         {
-            return View(db.Employees.ToList());
+            return View();
+        }
+
+        public JsonResult GetAll()
+        {
+            return Json(db.Employees, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Employee/Details/5
@@ -30,19 +35,47 @@ namespace Employee_List.Controllers
             }
             Employee employeeModel = db.Employees.Find(id);
 
+            //byte[] img = employeeModel.image;
+            //if (img != null)
+            //{
+            //    string path = byteArrayToImage(img);
+            //    ViewBag.ImageString = "data:image/jpeg;base64," + path;
+            //}
+
+            //if (employeeModel == null)
+            //{
+            //    return HttpNotFound();
+            //}
+
+            ViewBag.id = id;
+            return View(employeeModel);
+        }      
+
+        public JsonResult GetOne(int? id)
+        {
+            if(id == null)
+            {
+                return null;
+            }
+
+            Employee employeeModel = db.Employees.Find(id);
+            EmployeeDisplay emp = new EmployeeDisplay();
+
+            emp.ID = employeeModel.ID;
+            emp.name = employeeModel.name;
+            emp.start_date = employeeModel.start_date;
+            emp.end_date = employeeModel.end_date;
+            emp.title = employeeModel.title;
+
             byte[] img = employeeModel.image;
             if (img != null)
             {
                 string path = byteArrayToImage(img);
-                ViewBag.ImageString = "data:image/jpeg;base64," + path;
+                emp.imageString = "data:image/jpeg;base64," + path;
             }
 
-            if (employeeModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(employeeModel);
-        }      
+            return Json(emp, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: Employee/Create
         public ActionResult Create()

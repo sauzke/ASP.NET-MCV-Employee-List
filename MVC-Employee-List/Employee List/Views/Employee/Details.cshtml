@@ -14,32 +14,30 @@
             @Html.DisplayNameFor(model => model.name)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.name)
+        <dd id="name">
+            
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.title)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.title)
+        <dd id="title">
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.start_date)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.start_date)
+        <dd id="start_date">
+
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.end_date)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.end_date)
+        <dd id="end_date">
         </dd>
 
         <dt>
@@ -47,7 +45,7 @@
         </dt>
 
         <dd>
-            <img src="@ViewBag.ImageString" />
+            <img id="image" src="" />
         </dd>
 
     </dl>
@@ -56,3 +54,40 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            doAjax(function (callback) {
+                if (callback != 'success') {
+                    console.log("ajax reqest failed");
+                }
+            });
+        });
+
+        function doAjax(callback) {
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("GetOne")',
+                data: {'id': @ViewBag.id},
+                dataType: 'json',
+                success: function (data) {
+                    // parse json
+                    console.log(data);
+
+                    $("#name").append(data.name);
+                    $("#title").append(data.title);
+                    $("#start_date").append(new Date(parseInt(data.start_date.substr(6))));
+                    $("#end_date").append(new Date(parseInt(data.start_date.substr(6))));
+                    $("#image").attr('src', data.imageString);
+
+                    return callback('success');
+                },
+                error: function () {
+                    return callback('failed');
+                }
+            });
+        }
+    </script>
+}
