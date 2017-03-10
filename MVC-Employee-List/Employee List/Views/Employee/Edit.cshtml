@@ -6,7 +6,7 @@
 
 <h2>Edit</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -19,7 +19,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                <input class="form-control" id="name" name="name" type="text" required autofocus/>
                 @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                <input class="form-control" id="title" name="title" type="text" required />
                 @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -35,24 +35,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.start_date, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.start_date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.start_date, "", new { @class = "text-danger" })
+                <input class="form-control" id="start_date" name="start_date" type="date" />                
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.end_date, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.end_date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.end_date, "", new { @class = "text-danger" })
+                <input class="form-control" id="end_date" name="end_date" type="date" />
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.image, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.image, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.image, "", new { @class = "text-danger" })
+                <img id="imageDisplay" src=""/>
+                <input class="form-control" type="file" name="image" />
             </div>
         </div>
 
@@ -67,3 +65,37 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            doAjax(function (callback) {
+                if (callback != 'success') {
+                    console.log("ajax reqest failed");
+                }
+            });
+        });
+
+        function doAjax(callback) {
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json; charset=utf-8',
+                url: '@Url.Action("GetOne")',
+                data: {'id': @ViewBag.id},
+                dataType: 'json',
+                success: function (data) {                    
+                    $("#name").val(data.name);
+                    $("#title").val(data.title);
+                    $("#start_date").val(new Date(parseInt(data.start_date.substr(6))).toISOString().substr(0, 10));
+                    $("#end_date").val(new Date(parseInt(data.end_date.substr(6))).toISOString().substr(0, 10));
+                    $("#imageDisplay").attr('src', data.imageString);
+
+                    return callback('success');
+                },
+                error: function () {
+                    return callback('failed');
+                }
+            });
+        }
+    </script>
+}

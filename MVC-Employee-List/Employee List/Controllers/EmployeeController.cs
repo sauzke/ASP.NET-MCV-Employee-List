@@ -35,18 +35,6 @@ namespace Employee_List.Controllers
             }
             Employee employeeModel = db.Employees.Find(id);
 
-            //byte[] img = employeeModel.image;
-            //if (img != null)
-            //{
-            //    string path = byteArrayToImage(img);
-            //    ViewBag.ImageString = "data:image/jpeg;base64," + path;
-            //}
-
-            //if (employeeModel == null)
-            //{
-            //    return HttpNotFound();
-            //}
-
             ViewBag.id = id;
             return View(employeeModel);
         }      
@@ -126,6 +114,8 @@ namespace Employee_List.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.id = id;
             return View(employee);
         }
 
@@ -134,11 +124,26 @@ namespace Employee_List.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,name,title,start_date,end_date,image")] Employee employee)
+        public ActionResult Edit([Bind(Include = "ID,name,title,start_date,end_date")] Employee employee, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+                if (image != null && image.ContentLength > 0)
+                {
+                    byte[] img = imageToByteArray(image);
+
+                    if (img != null)
+                        employee.image = img;
+                    else
+                        employee.image = null;
+                }
+                else
+                {
+                    employee.image = null;
+                }
+
                 db.Entry(employee).State = System.Data.Entity.EntityState.Modified;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

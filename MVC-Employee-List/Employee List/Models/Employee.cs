@@ -23,6 +23,13 @@ namespace Employee_List.Models
         public string imageString { get; set; }
     }
 
+    public class Login
+    {
+        public int ID { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+    }
+
     public class EmployeeContext: DbContext
     {
         public EmployeeContext()
@@ -31,5 +38,6 @@ namespace Employee_List.Models
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Login> Logins { get; set; }
     }
 }

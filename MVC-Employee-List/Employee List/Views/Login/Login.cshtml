@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-signin" }))
+{
+    @Html.AntiForgeryToken()
+    <h2 class="form-signin-heading">User Login</h2>
+    <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
+    <input type="password" class="form-control" placeholder="Password" name="password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="login">Sign in</button>   
+
+    <div class="alert alert-danger" role="alert" id="warning">@ViewBag.Warning</div>
+}
+
+@section Styles{
+    <link href="~/Content/login.css" rel="stylesheet" type="text/css" />
+    }

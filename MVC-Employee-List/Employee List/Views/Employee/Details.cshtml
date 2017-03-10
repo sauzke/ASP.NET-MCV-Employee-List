@@ -79,7 +79,7 @@
                     $("#name").append(data.name);
                     $("#title").append(data.title);
                     $("#start_date").append(new Date(parseInt(data.start_date.substr(6))));
-                    $("#end_date").append(new Date(parseInt(data.start_date.substr(6))));
+                    $("#end_date").append(new Date(parseInt(data.end_date.substr(6))));
                     $("#image").attr('src', data.imageString);
 
                     return callback('success');
