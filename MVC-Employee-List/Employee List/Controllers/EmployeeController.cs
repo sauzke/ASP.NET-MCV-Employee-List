@@ -15,6 +15,18 @@ namespace Employee_List.Controllers
     {
         private EmployeeContext db = new EmployeeContext();
 
+        protected override JsonResult Json(object data, string contentType, System.Text.Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            return new JsonResult()
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         // GET: Employee
         public ActionResult Index()
         {
